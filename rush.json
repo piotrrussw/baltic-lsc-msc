@@ -319,12 +319,20 @@
    */
   "projects": [
     {
-      "packageName": "yew-store-csr",
-      "projectFolder": "packages/yew-store-csr"
+      "packageName": "yew-csr",
+      "projectFolder": "packages/yew-csr"
+    },
+    {
+      "packageName": "yew-ssr",
+      "projectFolder": "packages/yew-ssr"
     },
     {
       "packageName": "react-csr",
       "projectFolder": "packages/react-csr"
+    },
+    {
+      "packageName": "cors-proxy",
+      "projectFolder": "packages/cors-proxy"
     }
     // {
     //   /**

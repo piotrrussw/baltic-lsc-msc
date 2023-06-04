@@ -1,5 +1,5 @@
 {
-  "name": "yew-store-csr",
+  "name": "yew-ssr",
   "version": "0.0.1",
   "scripts": {
     "start": "trunk serve",

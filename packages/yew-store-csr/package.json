@@ -1,0 +1,8 @@
+{
+  "name": "yew-store-csr",
+  "version": "0.0.1",
+  "scripts": {
+    "start": "trunk serve",
+    "build": "trunk serve"
+  }
+}

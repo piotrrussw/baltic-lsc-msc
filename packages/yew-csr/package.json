@@ -2,7 +2,14 @@
   "name": "yew-csr",
   "version": "0.0.1",
   "scripts": {
-    "start": "trunk serve",
-    "build": "trunk serve"
+    "start": "trunk serve --port 8082",
+    "build": "trunk build --release",
+    "preview": "vite preview",
+    "generate:readme": "node generate-readme.js",
+    "test:client": "lhci autorun"
+  },
+  "devDependencies": {
+    "@lhci/cli": "0.12.0",
+    "vite": "^4.1.0"
   }
 }

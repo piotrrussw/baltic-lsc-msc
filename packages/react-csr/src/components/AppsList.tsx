@@ -1,49 +1,17 @@
 import { useMutation, useQueryClient } from "react-query";
-import styled from "styled-components";
 import dayjs from "dayjs";
 import { App, Filter, Shelf } from "../types";
-import { Button } from "./Button";
 import { useAtom } from "jotai";
 import { appsAtom, filtersAtom, shelfAtom } from "../store";
 import { RequestMethod, sendRequest } from "../api";
 import { Link } from "react-router-dom";
 
-const StyledList = styled.ul`
-  list-style: none;
-  display: flex;
-  flex-wrap: wrap;
-`;
+const dateSort = (a: App, b: App) =>
+  new Date(a.releases[a.releases.length - 1].date).getTime() >
+  new Date(b.releases[b.releases.length - 1].date).getTime()
+    ? 1
+    : -1;
 
-const ListItem = styled.li`
-  padding: 10px;
-  border: 1px solid #ccc;
-  margin: 5px 15px;
-  width: 250px;
-`;
-
-const Description = styled.p`
-  color: #888;
-`;
-
-const TitleContainer = styled.div`
-  display: flex;
-  align-items: center;
-`;
-
-const Title = styled(Link)`
-  margin: 0 0 0 25px;
-  color: #333;
-  font-size: 1.3rem;
-  text-decoration: none;
-  font-weight: 600;
-`;
-
-const ImageContainer = styled.div`
-  width: 50px;
-  height: 50px;
-`;
-
-const dateSort = (a: App, b: App) => new Date(a.releases[0].date).getTime() - new Date(b.releases[0].date).getTime();
 const nameSort = (a: App, b: App) => (a.name > b.name ? 1 : -1);
 
 const getFilteredData = (apps: App[], shelf: Shelf[], filter: Filter) => {
@@ -96,26 +64,55 @@ export function AppsList() {
   };
 
   return (
-    <StyledList>
+    <div className="row">
       {getFilteredData(apps, shelf, filter).map((item) => {
         const lastUpdate = item.releases[item.releases.length - 1].date;
 
         return (
-          <ListItem key={item.uid}>
-            <TitleContainer>
-              <ImageContainer>
-                <img src={item.icon} width="100%" height="auto" />
-              </ImageContainer>
-              <Title to={`/app/${item.uid}`}>{item.name}</Title>
-            </TitleContainer>
-            <Description>{item.shortDescription}</Description>
-            {lastUpdate && <Description>Updated on {dayjs(lastUpdate).format("YYYY-MM-DD HH:mm")}</Description>}
-            <Button onClick={() => toggleCockpit(item)} primary={item.inCockpit}>
-              {item.inCockpit ? "In cockpit" : "Add to cockpit"}
-            </Button>
-          </ListItem>
+          <div key={item.uid} className="col col-md-4">
+            <div className="card card-max-height">
+              <div className="row inline-card-title">
+                <img src={item.icon} width={50} height="auto" />
+                <div className="card-title">
+                  <Link to={`/app/${item.uid}`}>{item.name}</Link>
+                </div>
+              </div>
+              <p>{item.shortDescription}</p>
+              {lastUpdate && (
+                <div>
+                  <strong>Updated on:</strong> {dayjs(lastUpdate).format("YYYY-MM-DD HH:mm")}
+                </div>
+              )}
+              <div className="card-actions">
+                <button
+                  className={`${
+                    item.inCockpit ? "button-primary-outlined" : "button-primary"
+                  } button-small button-round`}
+                  onClick={() => toggleCockpit(item)}
+                >
+                  {item.inCockpit ? "In cockpit" : "Add to cockpit"}
+                </button>
+              </div>
+            </div>
+          </div>
         );
       })}
-    </StyledList>
+    </div>
   );
 }
+
+export const AppsListSkeleton = () => {
+  return (
+    <div className="row">
+      <div className="col col-md-4">
+        <div className="card card-max-height skeleton" />
+      </div>
+      <div className="col col-md-4">
+        <div className="card card-max-height skeleton" />
+      </div>
+      <div className="col col-md-4">
+        <div className="card card-max-height skeleton" />
+      </div>
+    </div>
+  );
+};

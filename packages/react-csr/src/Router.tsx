@@ -8,12 +8,14 @@ export function Router() {
   return (
     <BrowserRouter>
       <Nav />
-      <Routes>
-        <Route path="/" element={<Store />} />
-        <Route path="/store" element={<Store />} />
-        <Route path="/shelf" element={<Shelf />} />
-        <Route path="/app/:id" element={<App />} />
-      </Routes>
+      <main className="container">
+        <Routes>
+          <Route path="/" element={<Store />} />
+          <Route path="/store" element={<Store />} />
+          <Route path="/shelf" element={<Shelf />} />
+          <Route path="/app/:id" element={<App />} />
+        </Routes>
+      </main>
     </BrowserRouter>
   );
 }

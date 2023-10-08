@@ -1,44 +1,136 @@
+mod components;
+mod pages;
+mod types;
+
+use std::rc::Rc;
+
 use yew::prelude::*;
-use yew::ServerRenderer;
+use yew_router::prelude::*;
 use yew::Renderer;
 
-#[function_component]
-fn App() -> Html {
-    let counter = use_state(|| 0);
-    let onclick = {
-        let counter = counter.clone();
-        move |_| {
-            let value = *counter + 1;
-            counter.set(value);
-        }
-    };
+use pages::app::App;
+use pages::shelf::Shelf;
+use pages::store::Store;
 
-    html! {
-        <div>
-            <h1>{"Hello"}</h1>
-            <button {onclick}>{ "+1" }</button>
-            <p>{ *counter }</p>
-        </div>
+use types::types::AppType;
+use types::types::ShelfType;
+
+use components::nav::Nav;
+
+#[derive(Clone, Debug, PartialEq)]
+pub struct State {
+    pub sort: String,
+    pub search: String,
+    pub apps: Vec<AppType>,
+    pub shelf: Vec<ShelfType>,
+}
+
+#[derive(Routable, PartialEq, Clone)]
+pub enum Route {
+    #[at("/")]
+    StoreRoute,
+    #[at("/shelf")]
+    ShelfRoute,
+    #[at("/app/:id")]
+    AppRoute { id: String },
+    #[not_found]
+    #[at("/404")]
+    NotFound,
+}
+
+fn switch(routes: Route) -> Html {
+    match routes {
+        Route::StoreRoute => {
+            html! { <Store /> }
+        }
+        Route::ShelfRoute => {
+            html! { <Shelf /> }
+        }
+        Route::AppRoute { id } => {
+            html! { <App id={id} /> }
+        }
+        Route::NotFound => {
+            html! { <h1>{ "404" }</h1> }
+        }
     }
 }
 
-// we use `flavor = "current_thread"` so this snippet can be tested in CI,
-// where tests are run in a WASM environment. You likely want to use
-// the (default) `multi_thread` favor as:
-// #[tokio::main]
-#[tokio::main(flavor = "current_thread")]
-async fn no_main() {
-    let renderer = ServerRenderer::<App>::new();
+impl Reducible for State {
+    type Action = Action;
 
-    let rendered = renderer.render().await;
+    fn reduce(self: Rc<Self>, action: Self::Action) -> Rc<Self> {
+        match action {
+            Action::UpdateSearch(new_search) => self.update_search(new_search),
+            Action::UpdateSort(new_sort) => self.update_sort(new_sort),
+            Action::UpdateApps(new_apps) => self.update_apps(new_apps),
+            Action::UpdateShelf(new_shelf) => self.update_shelf(new_shelf),
+        }
+    }
+}
 
-    // Prints: <div>Hello, World!</div>
-    println!("{}", rendered);
+pub enum Action {
+    UpdateSearch(String),
+    UpdateSort(String),
+    UpdateApps(Vec<AppType>),
+    UpdateShelf(Vec<ShelfType>),
+}
+
+impl State {
+    fn update_search(&self, new_search: String) -> Rc<Self> {
+        Rc::new(State {
+            search: new_search,
+            ..(*self).clone()
+        })
+    }
+
+    fn update_sort(&self, new_sort: String) -> Rc<Self> {
+        Rc::new(State {
+            sort: new_sort,
+            ..(*self).clone()
+        })
+    }
+
+    fn update_apps(&self, new_apps: Vec<AppType>) -> Rc<Self> {
+        Rc::new(State {
+            apps: new_apps,
+            ..(*self).clone()
+        })
+    }
+
+    fn update_shelf(&self, new_shelf: Vec<ShelfType>) -> Rc<Self> {
+        Rc::new(State {
+            shelf: new_shelf,
+            ..(*self).clone()
+        })
+    }
+}
+
+pub type StateContext = UseReducerHandle<State>;
+
+#[function_component(Main)]
+fn app() -> Html {
+    let ctx = use_reducer(|| State {
+        search: "".to_string(),
+        sort: "date".to_string(),
+        apps: vec![],
+        shelf: vec![],
+    });
+
+    html! {
+      <ContextProvider<StateContext> context={ctx}>
+        <div>
+          <BrowserRouter>
+          <Nav/>
+          <main class="container">
+              <Switch<Route> render={switch} />
+          </main>
+          </BrowserRouter>
+        </div>
+      </ContextProvider<StateContext>>
+    }
 }
 
 fn main() {
-    let renderer = Renderer::<App>::new();
-    // hydrates everything under body element, removes trailing
-    // elements (if any).
+    let renderer = Renderer::<Main>::new();
     renderer.hydrate();
 }

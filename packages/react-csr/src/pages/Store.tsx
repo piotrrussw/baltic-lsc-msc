@@ -3,7 +3,7 @@ import { useQuery } from "react-query";
 import { sendRequest, RequestMethod } from "../api";
 import { appsAtom, shelfAtom } from "../store";
 import { App, Shelf } from "../types";
-import { AppsList } from "../components/AppsList";
+import { AppsList, AppsListSkeleton } from "../components/AppsList";
 import { Filters } from "../components/Filters";
 
 export function Store() {
@@ -38,16 +38,12 @@ export function Store() {
     staleTime: 300_000,
   });
 
-  console.log(shelf);
-
-  if (isShelfLoading || isAppLoading) {
-    return <>"Loading..."</>;
-  }
+  const isLoading = isShelfLoading || isAppLoading;
 
   return (
-    <div>
+    <main>
       <Filters />
-      <AppsList />
-    </div>
+      {isLoading ? <AppsListSkeleton /> : <AppsList />}
+    </main>
   );
 }

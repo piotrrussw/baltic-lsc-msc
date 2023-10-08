@@ -6,4 +6,30 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-yew = { version = "0.20.0", features = ["csr"] }
+yew = { version = "0.20", features = ["csr"] }
+yew-router = "0.17"
+gloo-net = "0.2"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0.94"
+wasm-bindgen-futures = "0.4"
+chrono = "0.4.31"
+
+[dependencies.web-sys]
+version = "0.3.60"
+features = [
+    'Clipboard',
+    'FocusEvent',
+    'HtmlSelectElement',
+    'Location',
+    'MessageEvent',
+    'Navigator',
+    'PromiseRejectionEvent',
+    'UiEvent',
+    'VisibilityState',
+    'Window',
+]
+
+
+[features]
+hydration = ["yew/hydration"]
+ssr = ["yew/ssr"]

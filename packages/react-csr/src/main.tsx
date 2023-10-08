@@ -4,6 +4,11 @@ import { QueryClient, QueryClientProvider } from "react-query";
 import { Provider } from "jotai";
 import { Router } from "./Router";
 
+import "./css/font.css";
+import "./css/normalize.css";
+import "./css/mustard-ui.min.css";
+import "./css/main.css";
+
 const queryClient = new QueryClient();
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(

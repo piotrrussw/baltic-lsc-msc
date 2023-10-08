@@ -2,7 +2,7 @@
 
 Aplikacja BalticLSC napisana w javascript (z wykorzystaniem biblioteki React) renderowana po stronie klienta.
 
-![App store](src/public/app-store.png?raw=true "App store")
+![App store](./public/app-store.png?raw=true "App store")
 
 # Performance Metrics
 

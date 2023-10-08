@@ -2,7 +2,7 @@
 
 Aplikacja BalticLSC napisana w rust (z wykorzystaniem biblioteki Yew) renderowana po stronie klienta.
 
-![App store](src/assets/app-store.png?raw=true "App store")
+![App store](./assets/app-store.png?raw=true "App store")
 
 # Performance Metrics
 

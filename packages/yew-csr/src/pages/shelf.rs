@@ -1,20 +1,44 @@
 use yew::prelude::*;
+use gloo_net::http::Request;
 
-pub struct Shelf;
+use crate::types::types::*;
 
-impl Component for Shelf {
-    type Message = ();
-    type Properties = ();
+use crate::Action;
+use crate::StateContext;
 
-    fn create(_ctx: &Context<Self>) -> Self {
-        Self
+use crate::components::data_shelf_list::DataShelfList;
+
+#[function_component(Shelf)]
+pub fn shelf() -> Html {
+    let state_ctx = use_context::<StateContext>().unwrap();
+    let state = state_ctx.clone(); // Clone state_ctx
+
+    {
+        use_effect_with_deps(move |_| {
+                wasm_bindgen_futures::spawn_local(async move {
+                    let response: serde_json::Value =
+                        Request::get("http://localhost:3000/")
+                            .header("Content-Type", "application/json")
+                            .header("Target-URL", "https://balticlsc.iem.pw.edu.pl/backend/task/dataShelf")
+                            .send()
+                            .await
+                            .unwrap()
+                            .json()
+                            .await
+                            .unwrap();
+
+                if let Some(data) = response.get("data") {
+                    let fetched_data_shelf: Vec<DataShelfType> = serde_json::from_value(data.clone()).unwrap();
+                    state.dispatch(Action::UpdateDataShelf(fetched_data_shelf));
+                }
+            });
+            || ()
+        }, (),
+        );
     }
 
-    fn view(&self, _ctx: &Context<Self>) -> Html {
-        html! {
-            <div>
-                <h1>{"Shelf"}</h1>
-            </div>
-        }
+    html! {
+        <DataShelfList />
     }
 }
+

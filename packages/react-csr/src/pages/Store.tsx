@@ -1,38 +1,24 @@
-import { useAtom } from "jotai";
 import { useQuery } from "react-query";
-import { sendRequest, RequestMethod } from "../api";
-import { appsAtom, shelfAtom } from "../store";
+import { getAppList, GET_APP_LIST_QUERY_KEY, GET_SHELF_QUERY_KEY, getShelf } from "../api";
 import { App, Shelf } from "../types";
 import { AppsList, AppsListSkeleton } from "../components/AppsList";
 import { Filters } from "../components/Filters";
+import { useStore } from "../store/StoreProvider";
 
 export function Store() {
-  const [apps, setApps] = useAtom(appsAtom);
-  const [shelf, setShelf] = useAtom(shelfAtom);
+  const { dispatch } = useStore();
 
-  const payload = {
-    onlyApps: true,
-    onlyLastRelease: false,
-  };
-
-  const { isLoading: isAppLoading } = useQuery<App[]>(
-    ["/list", payload],
-    () => sendRequest(RequestMethod.POST, "/list", payload),
-    {
-      onSuccess: (response) => {
-        const fetchedApps = response.filter((a) => a.releases.length > 0);
-        fetchedApps.sort((a, b) => new Date(a.releases[0].date).getTime() - new Date(b.releases[0].date).getTime());
-
-        setApps(fetchedApps);
-      },
-      cacheTime: 300_000,
-      staleTime: 300_000,
-    }
-  );
-
-  const { isLoading: isShelfLoading } = useQuery<Shelf[]>(["/shelf"], () => sendRequest(RequestMethod.GET, "/shelf"), {
+  const { isLoading: isAppLoading } = useQuery<App[]>([GET_APP_LIST_QUERY_KEY], getAppList, {
     onSuccess: (response) => {
-      setShelf(response);
+      dispatch({ type: "SET_APPS", payload: response });
+    },
+    cacheTime: 300_000,
+    staleTime: 300_000,
+  });
+
+  const { isLoading: isShelfLoading } = useQuery<Shelf[]>([GET_SHELF_QUERY_KEY], getShelf, {
+    onSuccess: (response) => {
+      dispatch({ type: "SET_SHELF", payload: response });
     },
     cacheTime: 300_000,
     staleTime: 300_000,

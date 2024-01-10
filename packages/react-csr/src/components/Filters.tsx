@@ -1,16 +1,15 @@
 import { ChangeEvent } from "react";
-import { useAtom } from "jotai";
-import { filtersAtom } from "../store";
+import { useStore } from "../store/StoreProvider";
 
 export const Filters = () => {
-  const [filter, setFilter] = useAtom(filtersAtom);
+  const { state, dispatch } = useStore();
 
   const handleSort = (event: ChangeEvent<HTMLSelectElement>) => {
-    setFilter({ ...filter, sort: event.target.value });
+    dispatch({ type: "SET_FILTERS", payload: { ...state.filters, sort: event.target.value } });
   };
 
   const handleInput = (event: ChangeEvent<HTMLInputElement>) => {
-    setFilter({ ...filter, search: event.target.value });
+    dispatch({ type: "SET_FILTERS", payload: { ...state.filters, search: event.target.value } });
   };
 
   return (
@@ -23,7 +22,7 @@ export const Filters = () => {
 
       <div className="col col-sm-2">
         <div className="form-control">
-          <select onChange={handleSort} value={filter.sort}>
+          <select onChange={handleSort} value={state.filters.sort}>
             <option value="date">Date</option>
             <option value="name">Name</option>
           </select>

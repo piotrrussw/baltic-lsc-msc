@@ -1,0 +1,76 @@
+nav {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: #64b5f6;
+}
+
+.py-10 {
+  padding: 0 10px;
+}
+
+.card-max-height {
+  display: flex;
+  flex-direction: column;
+  height: 340px;
+}
+
+.card-max-height .card-actions {
+  flex: 1;
+  align-items: flex-end;
+}
+
+.inline-card-title {
+  display: grid;
+  align-items: center;
+  grid-template-columns: 1fr 1fr 1fr;
+  column-gap: 20px;
+}
+
+.inline-card-title .card-title {
+  font-size: 18px;
+  white-space: pre-wrap;
+}
+
+.skeleton {
+  background-color: #e3e6eb78;
+}
+
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 30px;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.panel-left {
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.panel-left img {
+  margin-right: 16px;
+}
+
+.panel-left p {
+  display: flex;
+  align-items: center;
+  margin: 0;
+}
+
+.v-stack {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.pt-0 {
+  padding-top: 0;
+}

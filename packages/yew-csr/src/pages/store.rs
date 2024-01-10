@@ -27,7 +27,6 @@ pub fn store() -> Html {
                     let response: serde_json::Value =
                         Request::post("http://localhost:3000/")
                             .header("Content-Type", "application/json")
-                            .header("Authorization", "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6ImRlbW8iLCJzdWIiOiJkZW1vIiwianRpIjoiZGViZDIyYjZkZTgxNDM3ZmFkMmFkOWM3MTRmN2VhYjUiLCJzaWQiOiJhMGRhOTY1OGMzNjc0ZTkyODk2NTdhZGY4MGNiNGE3YyIsImV4cCI6MTY5Njc1MzM4OSwiaXNzIjoid3V0LmJhbHRpY2xzYy5ldSIsImF1ZCI6Ind1dC5iYWx0aWNsc2MuZXUifQ.KSOVza-dUMxLwVh-Ikgur3UTOWxzE4DnmSSSG9Mwi2c")
                             .header("Target-URL", "https://balticlsc.iem.pw.edu.pl/backend/app/list")
                             .body(payload.to_string())
                             .send()
@@ -55,7 +54,6 @@ pub fn store() -> Html {
                     let response: serde_json::Value =
                         Request::get("http://localhost:3000/")
                             .header("Content-Type", "application/json")
-                            .header("Authorization", "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6ImRlbW8iLCJzdWIiOiJkZW1vIiwianRpIjoiZGViZDIyYjZkZTgxNDM3ZmFkMmFkOWM3MTRmN2VhYjUiLCJzaWQiOiJhMGRhOTY1OGMzNjc0ZTkyODk2NTdhZGY4MGNiNGE3YyIsImV4cCI6MTY5Njc1MzM4OSwiaXNzIjoid3V0LmJhbHRpY2xzYy5ldSIsImF1ZCI6Ind1dC5iYWx0aWNsc2MuZXUifQ.KSOVza-dUMxLwVh-Ikgur3UTOWxzE4DnmSSSG9Mwi2c")
                             .header("Target-URL", "https://balticlsc.iem.pw.edu.pl/backend/app/shelf")
                             .send()
                             .await

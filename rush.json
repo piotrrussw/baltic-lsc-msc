@@ -331,6 +331,10 @@
       "projectFolder": "packages/react-csr"
     },
     {
+      "packageName": "react-ssr",
+      "projectFolder": "packages/react-ssr"
+    },
+    {
       "packageName": "cors-proxy",
       "projectFolder": "packages/cors-proxy"
     }

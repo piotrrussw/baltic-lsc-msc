@@ -67,3 +67,20 @@ export type Filter = {
   sort: string;
   search: string;
 };
+
+export type DataShelf = {
+  uid: string;
+  name: string;
+  dataTypeUid: string;
+  dataTypeName: string;
+  dataTypeVersion: string;
+  multiplicity: number;
+  dataStructureUid: string;
+  dataStructureName: string;
+  dataStructureVersion: string;
+  accessTypeUid: string;
+  accessTypeName: string;
+  accessTypeVersion: string;
+  values: string;
+  accessValues: string;
+};

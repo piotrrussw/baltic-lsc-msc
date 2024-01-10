@@ -12,6 +12,7 @@ use pages::shelf::Shelf;
 use pages::store::Store;
 
 use types::types::AppType;
+use types::types::DataShelfType;
 use types::types::ShelfType;
 
 use components::nav::Nav;
@@ -22,6 +23,8 @@ pub struct State {
     pub search: String,
     pub apps: Vec<AppType>,
     pub shelf: Vec<ShelfType>,
+    pub data_shelf: Vec<DataShelfType>,
+    pub app: AppType,
 }
 
 #[derive(Routable, PartialEq, Clone)]
@@ -63,6 +66,8 @@ impl Reducible for State {
             Action::UpdateSort(new_sort) => self.update_sort(new_sort),
             Action::UpdateApps(new_apps) => self.update_apps(new_apps),
             Action::UpdateShelf(new_shelf) => self.update_shelf(new_shelf),
+            Action::UpdateDataShelf(new_data_shelf) => self.update_data_shelf(new_data_shelf),
+            Action::UpdateApp(new_app) => self.update_app(new_app),
         }
     }
 }
@@ -72,6 +77,8 @@ pub enum Action {
     UpdateSort(String),
     UpdateApps(Vec<AppType>),
     UpdateShelf(Vec<ShelfType>),
+    UpdateDataShelf(Vec<DataShelfType>),
+    UpdateApp(AppType),
 }
 
 impl State {
@@ -102,6 +109,20 @@ impl State {
             ..(*self).clone()
         })
     }
+
+    fn update_data_shelf(&self, new_data_shelf: Vec<DataShelfType>) -> Rc<Self> {
+        Rc::new(State {
+            data_shelf: new_data_shelf,
+            ..(*self).clone()
+        })
+    }
+
+    fn update_app(&self, new_app: AppType) -> Rc<Self> {
+        Rc::new(State {
+            app: new_app,
+            ..(*self).clone()
+        })
+    }
 }
 
 pub type StateContext = UseReducerHandle<State>;
@@ -113,6 +134,18 @@ fn app() -> Html {
         sort: "date".to_string(),
         apps: vec![],
         shelf: vec![],
+        data_shelf: vec![],
+        app: AppType {
+            shortDescription: None,
+            longDescription: None,
+            icon: "".to_string(),
+            releases: Vec::new(),
+            inCockpit: None,
+            isApp: None,
+            isService: None,
+            name: "".to_string(),
+            uid: "".to_string(),
+        },
     });
 
     html! {

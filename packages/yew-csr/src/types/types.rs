@@ -27,19 +27,27 @@ pub struct Pin {
     pub access_type_name: Option<String>,
 }
 
+#[allow(non_snake_case)]
 #[derive(Clone, PartialEq, Debug, Deserialize)]
 pub struct Release {
+    pub uid: String,
     pub version: String,
     pub date: String,
+    pub description: Option<String>,
+    pub openSource: Option<bool>,
+    pub status: i32,
 }
 
 #[allow(non_snake_case)]
 #[derive(Clone, PartialEq, Debug, Deserialize)]
 pub struct AppType {
     pub shortDescription: Option<String>,
+    pub longDescription: Option<String>,
     pub icon: String,
     pub releases: Vec<Release>,
     pub inCockpit: Option<bool>,
+    pub isApp: Option<bool>,
+    pub isService: Option<bool>,
     pub name: String,
     pub uid: String,
 }
@@ -60,4 +68,23 @@ pub struct ShelfType {
     // pub description: Option<String>,
     // pub open_source: bool,
     // pub usage_counter: i32,
+}
+
+#[allow(non_snake_case)]
+#[derive(Clone, PartialEq, Debug, Deserialize)]
+pub struct DataShelfType {
+    pub uid: String,
+    pub name: String,
+    pub dataTypeUid: Option<String>,
+    pub dataTypeName: Option<String>,
+    pub dataTypeVersion: Option<String>,
+    pub multiplicity: i32,
+    pub dataStructureUid: Option<String>,
+    pub dataStructureName: Option<String>,
+    pub dataStructureVersion: Option<String>,
+    pub accessTypeUid: String,
+    pub accessTypeName: Option<String>,
+    pub accessTypeVersion: String,
+    pub values: String,
+    pub accessValues: String,
 }

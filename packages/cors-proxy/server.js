@@ -1,12 +1,21 @@
 const express = require('express'),
-    request = require('request'),
+    rp = require('request-promise'),
     bodyParser = require('body-parser'),
     https = require('https'),
-    cache = require('memory-cache'),
-    app = express();
+    app = express(),
+    redis = require('redis');
 
-var myLimit = typeof (process.argv[2]) != 'undefined' ? process.argv[2] : '100kb';
-console.log('Using limit: ', myLimit);
+const USERNAME = "demo";
+const PASSWORD = "BalticDemo";
+const myLimit = typeof (process.argv[2]) != 'undefined' ? process.argv[2] : '100kb';
+const authorizationCacheKey = '__cache__Authorization';
+let redisClient;
+
+(async () => {
+    redisClient = redis.createClient();
+    redisClient.on("error", (error) => console.error(`Error : ${error}`));
+    await redisClient.connect();
+})();
 
 app.use(bodyParser.json({ limit: myLimit }));
 
@@ -19,7 +28,30 @@ const agentOptions = {
 
 const agent = new https.Agent(agentOptions);
 
-app.all('*', function (req, res, next) {
+
+const getAuthKey = () => new Promise((resolve) => {
+    rp({
+        agent,
+        method: 'POST',
+        url: "https://balticlsc.iem.pw.edu.pl/backend/Login",
+        body: { password: PASSWORD, username: USERNAME },
+        json: true
+    })
+        .then(res => resolve({ token: `Bearer ${res.data?.token}`, err: null }))
+        .catch(err => resolve({ token: null, err }))
+})
+
+const getProxyRequest = (method, url, json, token) => new Promise(async (resolve) => {
+    const headers = { Authorization: token }
+
+    rp({ agent, method, url, json, headers })
+        .then(res => resolve({ res, err: null }))
+        .catch(err => resolve({ res: null, err }))
+})
+
+
+app.all('*', async function (req, res, next) {
+
 
     // Set CORS headers: allow all origins, methods, and headers: you may want to lock this down in a production environment
     res.header("Access-Control-Allow-Origin", "*");
@@ -37,26 +69,57 @@ app.all('*', function (req, res, next) {
         }
 
         const key = "__cache__" + targetURL + req.method
-
         // Cache for performance tests
-        const cachedResponse = cache.get(key)
+        const cacheResults = await redisClient.get(key);
 
-        if (cachedResponse) {
+        if (cacheResults) {
             console.log("Response generated from cache")
-            res.send(cachedResponse.body)
-            return
+            const results = JSON.parse(cacheResults);
+            res.send(results)
+        } else {
+            const authKey = await redisClient.get(authorizationCacheKey);
+
+            if (!authKey) {
+                const { token, err } = await getAuthKey()
+
+                if (token) {
+                    await redisClient.set(authorizationCacheKey, token);
+                    const { res: proxyRes, err: proxyErr } = await getProxyRequest(req.method, targetURL, req.body, token)
+
+                    if (proxyErr) {
+                        res.send(500, { error: err })
+                    } else {
+                        await redisClient.set(key, JSON.stringify(proxyRes));
+                        res.send(proxyRes)
+                    }
+                } else {
+                    res.send(401, { error: err })
+                }
+            } else {
+                const cachedToken = await redisClient.get(authorizationCacheKey);
+                const { res: proxyRes, err: proxyErr } = await getProxyRequest(req.method, targetURL, req.body, cachedToken)
+
+                if (proxyErr) {
+                    const { token, err: authErr } = await getAuthKey()
+
+                    if (token) {
+                        await redisClient.set(authorizationCacheKey, token);
+                        const { res: proxyRes, err: proxyErr } = await getProxyRequest(req.method, targetURL, req.body, token)
+
+                        if (proxyErr) {
+                            res.send(500, { error: proxyErr })
+                        } else {
+                            res.send(proxyRes)
+                        }
+                    } else {
+                        res.send(401, { error: proxyErr || authErr })
+                    }
+                } else {
+                    await redisClient.set(key, JSON.stringify(proxyRes));
+                    res.send(proxyRes)
+                }
+            }
         }
-
-        request({ url: targetURL, method: req.method, agent, json: req.body, headers: { 'Authorization': req.header('Authorization') || '' } },
-            function (error, response, body) {
-                if (error) {
-                    console.error('error: ' + response?.statusCode)
-                }
-
-                if (res.statusCode !== 401) {
-                    cache.put(key, response, 1000 * 60 * 60)
-                }
-            }).pipe(res);
     }
 });
 

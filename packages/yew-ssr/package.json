@@ -2,9 +2,10 @@
   "name": "yew-ssr",
   "version": "0.0.1",
   "scripts": {
-    "start": "trunk serve --port 8082",
+    "cargo:run": "cargo run --release --features=ssr --bin simple_ssr_server -- --dir dist",
+    "start": "trunk build index.html && npm run cargo:run",
     "build": "trunk build --release",
-    "preview": "vite preview",
+    "preview": "npm run build && npm run cargo:run",
     "generate:readme": "node generate-readme.js",
     "test:client": "lhci autorun"
   },

@@ -18,4 +18,4 @@ Porównanie projektowania z uwzględnieniem kluczowych elementów do tworzenia F
 * [BalticLSC SSR WebAssembly](https://github.com/piotrrussw/baltic-lsc-msc/blob/main/packages/yew-ssr/README.md) - aplikacja BalticLSC napisana w rust (z wykorzystaniem biblioteki Yew) renderowana po stronie serwera
 * [BalticLSC SSR Javascript](https://github.com/piotrrussw/baltic-lsc-msc/blob/main/packages/react-csr/README.md) - aplikacja BalticLSC napisana w javascript (z wykorzystaniem biblioteki React) renderowana po stronie klienta
 * [BalticLSC SSR Javascript](https://github.com/piotrrussw/baltic-lsc-msc/blob/main/packages/react-ssr/README.md) - aplikacja BalticLSC napisana w javascript (z wykorzystaniem biblioteki React) renderowana po stronie serwera
-* [BalticLSC SSR Javascript](https://github.com/piotrrussw/baltic-lsc-msc/blob/main/packages/ssr-perf/README.md) - skrypt do load testów po stronie serwera
+* [Load tests](https://github.com/piotrrussw/baltic-lsc-msc/blob/main/packages/ssr-perf/README.md) - skrypt do load testów po stronie serwera

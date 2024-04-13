@@ -327,6 +327,14 @@
       "projectFolder": "packages/yew-ssr"
     },
     {
+      "packageName": "yew-ssr-v2",
+      "projectFolder": "packages/yew-ssr-v2"
+    },
+    {
+      "packageName": "yew-ssr-v3",
+      "projectFolder": "packages/yew-ssr-v3"
+    },
+    {
       "packageName": "react-csr",
       "projectFolder": "packages/react-csr"
     },
@@ -337,6 +345,10 @@
     {
       "packageName": "cors-proxy",
       "projectFolder": "packages/cors-proxy"
+    },
+    {
+      "packageName": "ssr-perf",
+      "projectFolder": "packages/ssr-perf"
     }
     // {
     //   /**

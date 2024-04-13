@@ -4,12 +4,15 @@
   "scripts": {
     "start": "trunk serve --port 8082",
     "build": "trunk build --release",
-    "preview": "vite preview",
+    "preview": "http-server dist/ -p 8074",
     "generate:readme": "node generate-readme.js",
     "test:client": "lhci autorun"
   },
   "devDependencies": {
     "@lhci/cli": "0.12.0",
     "vite": "^4.1.0"
+  },
+  "dependencies": {
+    "http-server": "^14.1.1"
   }
 }

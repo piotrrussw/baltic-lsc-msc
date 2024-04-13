@@ -1,0 +1,68 @@
+[package]
+name = "yew_ssr_v2"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+[[bin]]
+name = "simple_ssr_hydrate"
+required-features = ["hydration"]
+
+[[bin]]
+name = "simple_ssr_server"
+required-features = ["ssr"]
+
+[dependencies]
+yew = { version = "0.20" }
+yew-router = "0.17"
+reqwest = { version = "0.11.8", features = ["json"] }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0.94"
+gloo = "0.8"
+gloo-net = "0.2"
+uuid = { version = "1.0.0", features = ["serde"] }
+wasm-bindgen-futures = "0.4"
+futures = { version = "0.3", features = ["std"], default-features = false }
+log = "0.4"
+bytes = "1.0"
+chrono = "0.4.31"
+
+
+[target.'cfg(target_arch = "wasm32")'.dependencies]
+wasm-bindgen-futures = "0.4"
+wasm-logger = "0.2"
+
+[target.'cfg(not(target_arch = "wasm32"))'.dependencies]
+num_cpus = "1.13.1"
+tokio = { version = "1.33.0", features = ["full"] }
+axum = "0.6"
+tower = { version = "0.4", features = ["make"] }
+tower-http = { version = "0.3", features = ["fs"] }
+tower-limit = {version = "0.3.1"}
+env_logger = "0.10"
+clap = { version = "4", features = ["derive"] }
+hyper = { version = "0.14", features = ["server", "http1"] }
+actix-web = "4.0.1"
+actix-files = "0.6.0"
+
+[target.'cfg(unix)'.dependencies]
+jemallocator = "0.5"
+
+[dependencies.web-sys]
+version = "0.3.60"
+features = [
+    'Clipboard',
+    'FocusEvent',
+    'HtmlSelectElement',
+    'Location',
+    'MessageEvent',
+    'Navigator',
+    'PromiseRejectionEvent',
+    'UiEvent',
+    'VisibilityState',
+    'Window',
+]
+
+[features]
+ssr = ["yew/ssr"]
+hydration = ["yew/hydration"]

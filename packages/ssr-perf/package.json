@@ -1,0 +1,12 @@
+{
+  "name": "ssr-perf",
+  "version": "0.0.1",
+  "scripts": {
+    "cargo:run": "cargo run --release",
+    "start": "npm run build && npm run cargo:run",
+    "build": "cargo build --release"
+  },
+  "devDependencies": {
+    "vite": "^4.1.0"
+  }
+}
